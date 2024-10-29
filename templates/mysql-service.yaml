@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mychart.mysqlName" . }}
+  labels:
+    app: {{ include "mychart.mysqlName" . }}
+spec:
+  type: {{ .Values.mysql.service.type }}
+  ports:
+    - port: {{ .Values.mysql.service.port }}
+      targetPort: {{ .Values.mysql.service.port }}
+  selector:
+    app: {{ include "mychart.mysqlName" . }}

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mychart.flaskAppName" . }}
+  labels:
+    app: {{ include "mychart.flaskAppName" . }}
+spec:
+  replicas: {{ .Values.flaskApp.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "mychart.flaskAppName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "mychart.flaskAppName" . }}
+    spec:
+      containers:
+        - name: flask-app
+          image: {{ .Values.flaskApp.image }}
+          ports:
+            - containerPort: {{ .Values.flaskApp.service.port }}
+          env:
+            - name: DB_HOST
+              value: "{{ .Values.flaskApp.db.host }}"
+            - name: DB_USER
+              value: "{{ .Values.flaskApp.db.user }}"
+            - name: DB_PASSWORD
+              value: "{{ .Values.flaskApp.db.password }}"
+            - name: DB_NAME
+              value: "{{ .Values.flaskApp.db.name }}"
+          resources:
+            {{- toYaml .Values.flaskApp.resources | nindent 12 }}

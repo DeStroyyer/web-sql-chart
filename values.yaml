@@ -1,0 +1,35 @@
+mysql:
+  image: mysql:latest
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 3306
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1"
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 8Gi
+  rootPassword: rootpassword
+  database: mydatabase
+  user: flaskuser
+  password: flaskpassword
+
+flaskApp:
+  image: destroyyer/web-sql:latest
+  replicaCount: 1
+  service:
+    type: NodePort
+    port: 5000
+    nodePort: 30500
+  resources: {}
+  db:
+    host: my-release-mychart-mysql
+    user: flaskuser
+    password: flaskpassword
+    name: mydatabase
